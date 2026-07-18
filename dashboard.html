@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Dashboard - Expense Management System</title>
+<meta name="description" content="Overview of all expense metrics, charts and recent transactions."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link rel="stylesheet" href="css/style.css"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon"><span class="material-symbols-outlined">account_balance_wallet</span></div>
+      <div>
+        <div class="brand-name">Y-EMS</div>
+        <div class="brand-sub">Expense Manager</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <a class="nav-item active" href="dashboard.html">
+        <span class="material-symbols-outlined">dashboard</span>Dashboard
+      </a>
+      <a class="nav-item" href="add-expense.html">
+        <span class="material-symbols-outlined">add_circle</span>Add Expense
+      </a>
+      <a class="nav-item" href="reports.html">
+        <span class="material-symbols-outlined">analytics</span>Reports
+      </a>
+      <div class="nav-section-label" style="margin-top:12px">Data</div>
+      <a class="nav-item" href="edit-expense.html">
+        <span class="material-symbols-outlined">edit_note</span>Edit / Manage
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-card">
+        <div class="user-avatar" id="sidebarAvatar">Y</div>
+        <div>
+          <div class="user-name" id="sidebarUser">yogii</div>
+          <div class="user-role">Administrator</div>
+        </div>
+        <button class="btn-logout" id="logoutBtn" title="Logout">
+          <span class="material-symbols-outlined">logout</span>
+        </button>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <div class="main-content">
+    <header class="page-header">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+          <span></span><span></span><span></span>
+        </button>
+        <div>
+          <div class="topbar-title">Dashboard</div>
+          <div class="topbar-subtitle" id="dashDate"></div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="btn-icon" id="refreshBtn" title="Refresh data">
+          <span class="material-symbols-outlined">refresh</span>
+        </button>
+        <a href="add-expense.html" class="btn btn-primary btn-sm">
+          <span class="material-symbols-outlined">add</span><span class="btn-text">Add Expense</span>
+        </a>
+      </div>
+    </header>
+    <div class="page-body page-content-animate">
+      <div class="stat-cards" id="statCards">
+        <div class="stat-card"><div class="stat-icon blue"><span class="material-symbols-outlined">payments</span></div><div><div class="stat-label">Total Expenses</div><div class="stat-value" id="statTotal">₹0.00</div><div class="stat-sub" id="statTotalCount">0 records</div></div></div>
+        <div class="stat-card"><div class="stat-icon teal"><span class="material-symbols-outlined">today</span></div><div><div class="stat-label">Today's Expenses</div><div class="stat-value" id="statToday">₹0.00</div><div class="stat-sub" id="statTodayCount">0 today</div></div></div>
+        <div class="stat-card"><div class="stat-icon purple"><span class="material-symbols-outlined">calendar_month</span></div><div><div class="stat-label">This Month</div><div class="stat-value" id="statMonth">₹0.00</div><div class="stat-sub" id="statMonthCount">0 this month</div></div></div>
+        <div class="stat-card"><div class="stat-icon green"><span class="material-symbols-outlined">check_circle</span></div><div><div class="stat-label">Paid Amount</div><div class="stat-value" id="statPaid">₹0.00</div><div class="stat-sub" id="statPaidCount">0 paid</div></div></div>
+        <div class="stat-card"><div class="stat-icon yellow"><span class="material-symbols-outlined">pending</span></div><div><div class="stat-label">Pending Amount</div><div class="stat-value" id="statPending">₹0.00</div><div class="stat-sub" id="statPendingCount">0 pending</div></div></div>
+        <div class="stat-card"><div class="stat-icon red"><span class="material-symbols-outlined">receipt_long</span></div><div><div class="stat-label">Total Transactions</div><div class="stat-value" id="statTransactions">0</div><div class="stat-sub">All time</div></div></div>
+      </div>
+      <div class="charts-grid">
+        <div class="chart-card"><div class="card-header"><div class="card-title"><span class="material-symbols-outlined">bar_chart</span>Monthly Expenses</div></div><div class="card-body"><canvas id="chartMonthly"></canvas></div></div>
+        <div class="chart-card"><div class="card-header"><div class="card-title"><span class="material-symbols-outlined">donut_large</span>Category Wise</div></div><div class="card-body"><canvas id="chartCategory"></canvas></div></div>
+        <div class="chart-card"><div class="card-header"><div class="card-title"><span class="material-symbols-outlined">person</span>Founder Wise</div></div><div class="card-body"><canvas id="chartFounder"></canvas></div></div>
+        <div class="chart-card"><div class="card-header"><div class="card-title"><span class="material-symbols-outlined">group</span>Employee Wise</div></div><div class="card-body"><canvas id="chartEmployee"></canvas></div></div>
+        <div class="chart-card"><div class="card-header"><div class="card-title"><span class="material-symbols-outlined">pie_chart</span>Payment Status</div></div><div class="card-body"><canvas id="chartStatus"></canvas></div></div>
+      </div>
+      <div class="bottom-grid" id="bottomGrid">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><span class="material-symbols-outlined">table_rows</span>Recent Transactions</div>
+            <a href="edit-expense.html" class="btn btn-outline btn-sm">View All</a>
+          </div>
+          <div class="table-wrapper">
+            <table id="recentTable">
+              <thead><tr><th>Date</th><th>Expense ID</th><th>Purpose</th><th>Category</th><th>Employee</th><th>Amount</th><th>Status</th></tr></thead>
+              <tbody id="recentTableBody"><tr><td colspan="7"><div class="page-loading"><div class="spinner"></div>Loading...</div></td></tr></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title"><span class="material-symbols-outlined">folder_open</span>Latest Files</div></div>
+          <div class="card-body" id="latestFiles"><div class="page-loading"><div class="spinner"></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="js/config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/api.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>

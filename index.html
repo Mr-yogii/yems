@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Login - Expense Management System</title>
+<meta name="description" content="Secure login for the Yogii Expense Management System."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+<div class="login-page">
+  <div class="login-card">
+    <div class="login-brand">
+      <div class="login-brand-icon">
+        <span class="material-symbols-outlined">account_balance_wallet</span>
+      </div>
+      <h1>Y-EMS</h1>  
+      <p>Expense Management System</p>
+    </div>
+    <div id="loginAlert" class="login-alert error">
+      <span class="material-symbols-outlined" style="font-size:16px">error</span>
+      <span id="loginAlertMsg">Invalid username or password.</span>
+    </div>
+    <form id="loginForm" novalidate>
+      <div class="form-group">
+        <label class="form-label" for="username">Username</label>
+        <div class="input-group">
+          <span class="material-symbols-outlined">person</span>
+          <input class="form-control" type="text" id="username" placeholder="Enter username" autocomplete="username" required/>
+        </div>
+        <div class="form-error" id="usernameError">Username is required.</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="password">Password</label>
+        <div class="input-group">
+          <span class="material-symbols-outlined">lock</span>
+          <input class="form-control" type="password" id="password" placeholder="Enter password" autocomplete="current-password" required/>
+          <span class="material-symbols-outlined toggle-pw" id="togglePw">visibility</span>
+        </div>
+        <div class="form-error" id="passwordError">Password is required.</div>
+      </div>
+      <button type="submit" class="btn btn-primary" id="loginBtn" style="width:100%;margin-top:8px;padding:12px">
+        <span class="material-symbols-outlined">login</span>
+        <span class="btn-text">Sign In</span>
+      </button>
+    </form>
+    <div class="login-footer">
+      &copy; 2026 Yogii &mdash; All belongs to Yogii.
+    </div>
+  </div>
+</div>
+<script src="js/config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/utils.js"></script>
+<script>
+(function(){
+  if(Auth.isLoggedIn()){window.location.href='dashboard.html';return;}
+  const form=document.getElementById('loginForm');
+  const btn=document.getElementById('loginBtn');
+  const alert=document.getElementById('loginAlert');
+  const alertMsg=document.getElementById('loginAlertMsg');
+  document.getElementById('togglePw').addEventListener('click',function(e){
+    e.preventDefault();
+    const pw=document.getElementById('password');
+    const vis=pw.type==='password';
+    pw.type=vis?'text':'password';
+    this.textContent=vis?'visibility_off':'visibility';
+    pw.focus();
+    const val = pw.value;
+    pw.value = '';
+    pw.value = val;
+  });
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    const u=document.getElementById('username').value.trim();
+    const p=document.getElementById('password').value;
+    let valid=true;
+    if(!u){document.getElementById('usernameError').classList.add('show');valid=false;}
+    else{document.getElementById('usernameError').classList.remove('show');}
+    if(!p){document.getElementById('passwordError').classList.add('show');valid=false;}
+    else{document.getElementById('passwordError').classList.remove('show');}
+    if(!valid)return;
+    btn.classList.add('btn-loading');
+    btn.disabled=true;
+    setTimeout(function(){
+      if(Auth.login(u,p)){
+        window.location.href='dashboard.html';
+      } else {
+        alert.classList.add('show');
+        alertMsg.textContent='Invalid username or password.';
+        btn.classList.remove('btn-loading');
+        btn.disabled=false;
+      }
+    },600);
+  });
+})();
+</script>
+</body>
+</html>
