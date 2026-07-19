@@ -14,6 +14,7 @@ const CONFIG = {
     "docx",
     "xls",
     "xlsx",
+    
     "zip",
   ],
   ALLOWED_MIME_TYPES: [
