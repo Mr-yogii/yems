@@ -5,9 +5,20 @@ const Auth = (() => {
   }
 
   function login(username, password) {
-    if (username === CONFIG.AUTH.USERNAME && password === CONFIG.AUTH.PASSWORD) {
+    const trimmedUser = username.trim().toLowerCase();
+    if (CONFIG.AUTH.USERS) {
+      const user = CONFIG.AUTH.USERS.find(
+        u => u.USERNAME.toLowerCase() === trimmedUser && u.PASSWORD === password
+      );
+      if (user) {
+        sessionStorage.setItem(CONFIG.AUTH.SESSION_KEY, "authenticated");
+        sessionStorage.setItem("ems_user", user.NAME);
+        return true;
+      }
+    }
+    if (trimmedUser === CONFIG.AUTH.USERNAME.toLowerCase() && password === CONFIG.AUTH.PASSWORD) {
       sessionStorage.setItem(CONFIG.AUTH.SESSION_KEY, "authenticated");
-      sessionStorage.setItem("ems_user", username);
+      sessionStorage.setItem("ems_user", "Yogii");
       return true;
     }
     return false;
