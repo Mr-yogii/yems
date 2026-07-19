@@ -34,6 +34,11 @@ const CONFIG = {
   AUTH: {
     USERNAME: "yogii",
     PASSWORD: "1502",
+    USERS: [
+      { USERNAME: "yogii", PASSWORD: "1502", NAME: "Yogii" },
+      { USERNAME: "bt", PASSWORD: "123", NAME: "Balaji Thiru" },
+      { USERNAME: "bv", PASSWORD: "123", NAME: "Balaji Varadhan" }
+    ],
     SESSION_KEY: "ems_session",
   },
   CATEGORIES: [
